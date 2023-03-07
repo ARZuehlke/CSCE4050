@@ -40,7 +40,7 @@ c1 = read_bytes("Exhaustive Search Project/c1.bin")
 c2 = read_bytes("Exhaustive Search Project/c2.bin")
 c3 = read_bytes("Exhaustive Search Project/c3.bin")
 
-# for loop to iterate through a 24 bit keyspace 
+# For loop to iterate through a 24 bit keyspace 
 for key in range(2 ** 24):
     
     pretext_key = 2 ** 127
