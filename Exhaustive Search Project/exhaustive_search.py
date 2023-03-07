@@ -15,19 +15,18 @@ import argparse
 from random import randint
 from utils_demo import *
 
-# Modified encryption function. It gets a plaintext a key and returns the ciphertext and nonce.
-def encryptor(message, key, nonce):
-    cipher = AES.new(key, AES.MODE_CTR)
-    ct = cipher.encrypt(message)  
-    nonce = cipher.nonce
+# This is a modified encryption function for the AES loop, it uses the messages and nonces provided
+def mod_encryptor_CTR(message, key, nonce):
+    cipher = AES.new(key, AES.MODE_CTR, nonce=nonce)
+    ct = cipher.encrypt(message)    
     return ct
 
 m1 = read_file("Exhaustive Search Project/m1.txt")
-m1 = bytes(m1, 'utf-8') # Converts from UTF-8 to byte type usable by AES encryption function
+m1 = string_to_bytes(m1) # Converts from UTF-8 to bytearray usable by AES encryption function
 m2 = read_file("Exhaustive Search Project/m2.txt")
-m2 = bytes(m2, 'utf-8') # Converts from UTF-8 to byte type usable by AES encryption function
+m2 = string_to_bytes(m2) # Converts from UTF-8 to bytearray usable by AES encryption function
 m3 = read_file("Exhaustive Search Project/m3.txt")
-m3 = bytes(m3, 'utf-8') # Converts from UTF-8 to byte type usable by AES encryption function
+m3 = string_to_bytes(m3) # Converts from UTF-8 to bytearray usable by AES encryption function
 
 # Reads nonce values into bytearray variables
 nonce_c = read_bytes("Exhaustive Search Project/nonce_c.bin")
@@ -41,17 +40,30 @@ c1 = read_bytes("Exhaustive Search Project/c1.bin")
 c2 = read_bytes("Exhaustive Search Project/c2.bin")
 c3 = read_bytes("Exhaustive Search Project/c3.bin")
 
-
+# for loop to iterate through a 24 bit keyspace 
 for key in range(2 ** 24):
     
-    pretex_key = 2 ** 127
-    full_key = pretex_key + key
-    full_key = format(full_key, "b")
-    full_key = bitstring_to_bytes(full_key)
-    print(full_key)
-
-    if encryptor(m1, full_key, nonce1) == c1:
-        if encryptor(m2, full_key, nonce2) == c2 & encryptor(m3, full_key, nonce3) == c3:
+    pretext_key = 2 ** 127
+    full_key = pretext_key + key # Increment key +1
+    full_key = format(full_key, "b") # Convert key to bitstring
+    full_key = bitstring_to_bytes(full_key) # Convert bitstring to bytearray usable by mod_encryptor_CTR
+    
+    if mod_encryptor_CTR(m1, full_key, nonce1) == c1:
+        if (mod_encryptor_CTR(m2, full_key, nonce2) == c2) & (mod_encryptor_CTR(m3, full_key, nonce3) == c3):
             break
 
-print(full_key)
+# Store the full_key from the loop into new variable found_key
+found_key = full_key
+# Print the found key to the terminal
+print(found_key)
+# Open key.bin file and write found_key as bytearray
+write_bytes("key.bin", found_key)
+
+# Print the results of c_c decryption to the terminal
+print(str(decryptor_CTR(c_c, nonce_c, found_key), 'UTF-8'))
+
+# actual_key = b'\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00_\xeed'
+
+
+
+
