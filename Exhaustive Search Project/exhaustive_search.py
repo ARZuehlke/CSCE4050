@@ -57,10 +57,8 @@ found_key = full_key
 # Print the found key to the terminal
 print(found_key)
 # Open key.bin file and write found_key as bytearray
-write_bytes("key.bin", found_key)
+write_bytes("Exhaustive Search Project/key.bin", found_key)
 
-# Print the results of c_c decryption to the terminal
-print(str(decryptor_CTR(c_c, nonce_c, found_key), 'UTF-8'))
 
 # actual_key = b'\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00_\xeed'
 
