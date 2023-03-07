@@ -1,14 +1,14 @@
 import json
 from base64 import b64encode, b64decode
-from Cryptodome.Cipher import AES
-from Cryptodome.Util.Padding import pad, unpad
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
 import time
 import argparse
 from random import randint
 
 
 # This is the encryption function. It gets a plaintext a key and returns the ciphertext and nonce.
-def encryptor_CTR(message, key, nonce = None):
+def encryptor_CTR(message, key, nonce):
     cipher = AES.new(key, AES.MODE_CTR)
     ct = cipher.encrypt(message)    
     nonce = cipher.nonce
